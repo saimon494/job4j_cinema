@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+            // const search = new URLSearchParams(document.location.search);
+        const search = (new URL(document.location)).searchParams;
+            document.querySelector('h3').innerText =
+                `Вы выбрали ряд ${search.get('row')}, место ${search.get('column')}. Сумма: 500 рублей.`;
+            document.querySelector('.btn').onclick = pay;
+        }
+    );
+
+    function pay() {
+        let name = $('#username').val();
+        let phone = $('#phone').val();
+        let hall = $('#hall').val();
+        let regexName = /[а-яА-ЯёЁ]/;
+        let regexPhone = /^(\+7|7|8)\s?\(?[489][0-9]{2}\s\)?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        if (name === '' || phone === '' || hall === '') {
+            alert('Заполните все поля');
+            return;
+        }
+        if (!regexName.test(name) || !regexPhone.test(phone)) {
+            alert('Некорректно введены данные');
+            return;
+        }
+        // const search = new URLSearchParams(document.location.search);
+        const search = (new URL(document.location)).searchParams;
+        $.ajax({
+            type: 'GET',
+            crossdomain: true,
+            url: `http://localhost:8080/cinema/check?rowCol=${search.get('row') + search.get('column')}`,
+        }).done(function (data) {
+            const hall = JSON.parse(data);
+            if (hall.accountId !== 0) {
+                alert('Выбранное вами место уже забронировано');
+                window.location.href = 'http://localhost:8080/cinema/index.html';
+            }
+        }).fail(function (err) {
+            alert(err);
+        })
+
+        const account = {
+            name: document.querySelector("#username").value,
+            phone: document.querySelector("#phone").value,
+            hall: search.get('row') + search.get('column')
+        }
+        $.ajax({
+            type: 'POST',
+            crossdomain: true,
+            url: 'http://localhost:8080/cinema/account',
+            data: JSON.stringify(account),
+        }).done(function (data) {
+            if (data === 'success') {
+                alert('Место успешно забронировано');
+            } else {
+                alert('Выбранное вами место уже забронировано');
+            }
+            window.location.href = 'http://localhost:8080/cinema/index.html';
+        }).fail(function (err) {
+            alert(err);
+        })
+    }
+</script>
+<div class="container">
+    <div class="row pt-3">
+        <h3>
+            Вы выбрали ряд 1 место 1, Сумма : 500 рублей.
+        </h3>
+    </div>
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="username">ФИО</label>
+                <input type="text" class="form-control" id="username" name="name" placeholder="Введите ФИО">
+            </div>
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="+7 916 777-77-77">
+            </div>
+            <button type="button" class="btn btn-success">Оплатить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

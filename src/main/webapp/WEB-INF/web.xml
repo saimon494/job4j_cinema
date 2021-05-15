@@ -1,0 +1,34 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+  <servlet>
+    <servlet-name>HallServlet</servlet-name>
+    <servlet-class>ru.job4j.cinema.servlet.HallServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HallServlet</servlet-name>
+    <url-pattern>/hall</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>HallCheckServlet</servlet-name>
+    <servlet-class>ru.job4j.cinema.servlet.HallCheckServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HallCheckServlet</servlet-name>
+    <url-pattern>/check</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AccountServlet</servlet-name>
+    <servlet-class>ru.job4j.cinema.servlet.AccountServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AccountServlet</servlet-name>
+    <url-pattern>/account</url-pattern>
+  </servlet-mapping>
+</web-app>
