@@ -31,7 +31,3 @@ INSERT INTO hall(row_column)
 VALUES (32);
 INSERT INTO hall(row_column)
 VALUES (33);
-
---select * from hall;
---truncate table hall RESTART IDENTITY;
---truncate table account cascade;
